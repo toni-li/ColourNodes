@@ -10,7 +10,6 @@ import SceneKit
 import ARKit
 
 class ViewController: UIViewController, ARSCNViewDelegate {
-
     @IBOutlet var sceneView: ARSCNView!
     
     override func viewDidLoad() {
@@ -23,8 +22,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         sceneView.showsStatistics = true
         
         // Create a new scene
-        let scene = SCNScene(named: "art.scnassets/ship.scn")!
-        
+        let scene = SCNScene(named: "art.scnassets/blank.scn")!
+    
         // Set the scene to the view
         sceneView.scene = scene
     }
@@ -45,12 +44,17 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         // Pause the view's session
         sceneView.session.pause()
     }
-
+    
+    var tempX = 0.0
+    var tempY = 0.0
+    
     @IBOutlet weak var hexCodeLabel: UILabel!
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         if let touch = event?.allTouches?.first {
+            // getting the location of the touch
             let loc:CGPoint = touch.location(in: sceneView)
             
+            // getting the hex value of the node
             let image = sceneView.snapshot()
             let x = image.size.width / sceneView.frame.size.width
             let y = image.size.height / sceneView.frame.size.height
@@ -63,12 +67,38 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             let rgbBlueValue = color[2]
             
             let hexValue = String(format:"%02X", Int(rgbRedValue)) + String(format:"%02X", Int(rgbGreenValue)) + String(format:"%02X", Int(rgbBlueValue))
-            print(color)
+            //print(color)
             print(hexValue)
+            
+            let nodeImg = SCNNode(geometry: SCNSphere(radius: 0.05))
+            nodeImg.physicsBody? = .static()
+            //nodeImg.name = name
+            //nodeImg.physicsBody?.categoryBitMask = MaskNum.barrier.rawValue
+            //nodeImg.geometry?.materials.first?.diffuse.contents = UIImage(named: "nodeImg")
+            nodeImg.geometry?.materials.first?.diffuse.contents = UIColor.blue
+            nodeImg.position = SCNVector3(0, 0, -5.0)
+            print(nodeImg.position)
+
+            sceneView.scene.rootNode.addChildNode(nodeImg)
+            
+            let text = SCNText(string: hexValue, extrusionDepth: 0.0)
+            text.firstMaterial?.diffuse.contents = UIColor.black
+            
+            let nodeText = SCNNode(geometry: text)
+            let fontScale: Float = 0.01
+            nodeText.scale = SCNVector3(fontScale, fontScale, fontScale)
+            
+            nodeImg.addChildNode(nodeText)
+            
+            
+            
+            
+            
+            
+            
 
         }
     }
-    
     
     // MARK: - ARSCNViewDelegate
     
