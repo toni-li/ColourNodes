@@ -122,6 +122,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             
             nodeText.position.x = 0.05
             nodeText.position.y = 0.05
+            
+            nodeText.constraints = [SCNBillboardConstraint()]
 
             nodeImg.addChildNode(nodeText)
             
@@ -130,16 +132,16 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             let bound = SCNVector3Make(maxVec.x - minVec.x,
                                        maxVec.y - minVec.y,
                                        maxVec.z - minVec.z);
-
+            
             let plane = SCNPlane(width: CGFloat(bound.x + 1.5),
                                  height: CGFloat(bound.y + 1.5))
             plane.cornerRadius = 0.2
             plane.firstMaterial?.diffuse.contents = UIColor.white.withAlphaComponent(0.8)
-
             let planeNode = SCNNode(geometry: plane)
             planeNode.position = SCNVector3(CGFloat( minVec.x) + CGFloat(bound.x) / 2 ,
                                             CGFloat( minVec.y) + CGFloat(bound.y) / 2,CGFloat(minVec.z - 0.01))
-
+            planeNode.constraints = [SCNBillboardConstraint()]
+            
             nodeText.addChildNode(planeNode)
             planeNode.name = "text"
         }
