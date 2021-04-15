@@ -53,6 +53,25 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         if let touch = event?.allTouches?.first {
             // getting the location of the touch
             let loc:CGPoint = touch.location(in: sceneView)
+            // Compute near & far points
+                let nearVector = SCNVector3(x: Float(loc.x), y: Float(loc.y), z: 0)
+                let nearScenePoint = sceneView.unprojectPoint(nearVector)
+                let farVector = SCNVector3(x: Float(loc.x), y: Float(loc.y), z: 1)
+                let farScenePoint = sceneView.unprojectPoint(farVector)
+
+                // Compute view vector
+                let viewVector = SCNVector3(x: Float(farScenePoint.x - nearScenePoint.x), y: Float(farScenePoint.y - nearScenePoint.y), z: Float(farScenePoint.z - nearScenePoint.z))
+
+                // Normalize view vector
+                let vectorLength = sqrt(viewVector.x*viewVector.x + viewVector.y*viewVector.y + viewVector.z*viewVector.z)
+                let normalizedViewVector = SCNVector3(x: viewVector.x/vectorLength, y: viewVector.y/vectorLength, z: viewVector.z/vectorLength)
+
+                // Scale normalized vector to find scene point
+                let scale = Float(5)
+                let scenePoint = SCNVector3(x: normalizedViewVector.x*scale, y: normalizedViewVector.y*scale, z: normalizedViewVector.z*scale)
+
+                print("2D point: \(loc). 3D point: \(nearScenePoint). Far point: \(farScenePoint). scene point: \(scenePoint)")
+
             
             // getting the hex value of the node
             let image = sceneView.snapshot()
@@ -76,7 +95,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             //nodeImg.physicsBody?.categoryBitMask = MaskNum.barrier.rawValue
             //nodeImg.geometry?.materials.first?.diffuse.contents = UIImage(named: "nodeImg")
             nodeImg.geometry?.materials.first?.diffuse.contents = UIColor.blue
-            nodeImg.position = SCNVector3(0, 0, -5.0)
+            nodeImg.position = SCNVector3(scenePoint.x, scenePoint.y, scenePoint.z)
             print(nodeImg.position)
 
             sceneView.scene.rootNode.addChildNode(nodeImg)
