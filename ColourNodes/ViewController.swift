@@ -26,6 +26,22 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
         // Set the scene to the view
         sceneView.scene = scene
+        
+        // CLEAR button
+        let rect1 = CGRect(x:20, y:650, width: 100, height:50)
+        let clearButton = UIButton(frame: rect1)
+        clearButton.layer.cornerRadius = 5
+        clearButton.backgroundColor = UIColor.white.withAlphaComponent(0.8)
+        clearButton.setTitle("Clear", for: .normal)
+        clearButton.addTarget(self, action: #selector(clear), for: .touchUpInside)
+        
+        self.view.addSubview(clearButton)
+    }
+    
+    @objc func clear(sender: UIButton!) {
+        sceneView.scene.rootNode.enumerateChildNodes { (node, stop) in
+            node.removeFromParentNode()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -94,20 +110,43 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             //nodeImg.name = name
             //nodeImg.physicsBody?.categoryBitMask = MaskNum.barrier.rawValue
             //nodeImg.geometry?.materials.first?.diffuse.contents = UIImage(named: "nodeImg")
-            nodeImg.geometry?.materials.first?.diffuse.contents = UIColor.blue
+            nodeImg.geometry?.materials.first?.diffuse.contents = UIColor(red: 0.96, green: 0.84, blue: 0.45, alpha: 1.00)
             nodeImg.position = SCNVector3(scenePoint.x, scenePoint.y, scenePoint.z)
             print(nodeImg.position)
 
             sceneView.scene.rootNode.addChildNode(nodeImg)
+        
             
             let text = SCNText(string: hexValue, extrusionDepth: 0.0)
             text.firstMaterial?.diffuse.contents = UIColor.black
-            
             let nodeText = SCNNode(geometry: text)
             let fontScale: Float = 0.01
             nodeText.scale = SCNVector3(fontScale, fontScale, fontScale)
             
+            nodeText.position.x = 0.05
+            nodeText.position.y = 0.05
+
             nodeImg.addChildNode(nodeText)
+            
+            let minVec = nodeText.boundingBox.min
+            let maxVec = nodeText.boundingBox.max
+            let bound = SCNVector3Make(maxVec.x - minVec.x,
+                                       maxVec.y - minVec.y,
+                                       maxVec.z - minVec.z);
+
+            let plane = SCNPlane(width: CGFloat(bound.x + 1.5),
+                                 height: CGFloat(bound.y + 1.5))
+            plane.cornerRadius = 0.2
+            plane.firstMaterial?.diffuse.contents = UIColor.white.withAlphaComponent(0.8)
+
+            let planeNode = SCNNode(geometry: plane)
+            planeNode.position = SCNVector3(CGFloat( minVec.x) + CGFloat(bound.x) / 2 ,
+                                            CGFloat( minVec.y) + CGFloat(bound.y) / 2,CGFloat(minVec.z - 0.01))
+
+            nodeText.addChildNode(planeNode)
+            planeNode.name = "text"
+            
+        
             
             
             
