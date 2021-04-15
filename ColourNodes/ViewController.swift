@@ -49,6 +49,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         // Create a session configuration
         let configuration = ARWorldTrackingConfiguration()
+        configuration.planeDetection = [.horizontal, .vertical]
 
         // Run the view's session
         sceneView.session.run(configuration)
@@ -61,10 +62,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         sceneView.session.pause()
     }
     
-    var tempX = 0.0
-    var tempY = 0.0
-    
-    @IBOutlet weak var hexCodeLabel: UILabel!
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         if let touch = event?.allTouches?.first {
             // getting the location of the touch
@@ -145,16 +142,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 
             nodeText.addChildNode(planeNode)
             planeNode.name = "text"
-            
-        
-            
-            
-            
-            
-            
-            
-            
-
         }
     }
     
