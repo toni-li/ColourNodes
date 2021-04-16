@@ -174,10 +174,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, UITableViewDelegate, 
         
             let nodeImg = SCNNode(geometry: SCNSphere(radius: 0.05))
             nodeImg.physicsBody? = .static()
-            //nodeImg.name = name
-            //nodeImg.physicsBody?.categoryBitMask = MaskNum.barrier.rawValue
-            //nodeImg.geometry?.materials.first?.diffuse.contents = UIImage(named: "nodeImg")
-            nodeImg.geometry?.materials.first?.diffuse.contents = UIColor(red: 0.96, green: 0.84, blue: 0.45, alpha: 1.00)
+            nodeImg.geometry?.materials.first?.diffuse.contents = hexColor
+            nodeImg.geometry?.materials.first?.specular.contents = UIColor.white
             nodeImg.position = SCNVector3(scenePoint.x, scenePoint.y, scenePoint.z)
             print(nodeImg.position)
 
