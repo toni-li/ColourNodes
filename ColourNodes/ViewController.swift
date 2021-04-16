@@ -9,8 +9,17 @@ import UIKit
 import SceneKit
 import ARKit
 
-class ViewController: UIViewController, ARSCNViewDelegate {
+class ViewController: UIViewController, ARSCNViewDelegate, UITableViewDelegate, UITableViewDataSource {
     @IBOutlet var sceneView: ARSCNView!
+    
+    // TODO: update these to take in the nodes from the environment
+    let hexCodes: [String] = ["#C26C49", "#E2b9A8", "#5C77AC"]
+    // TODO: convert hexcodes from array above into UI colors
+    let hexColors = [UIColor(red: 0.76, green: 0.42, blue: 0.29, alpha: 1.00), UIColor(red: 0.89, green: 0.73, blue: 0.66, alpha: 1.00), UIColor(red: 0.36, green: 0.47, blue: 0.67, alpha: 1.00)]
+    
+    let cellReuseIdentifier = "cell"
+    
+    @IBOutlet var tableView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,19 +37,62 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         sceneView.scene = scene
         
         // CLEAR button
-        let rect1 = CGRect(x:20, y:650, width: 100, height:50)
-        let clearButton = UIButton(frame: rect1)
+        let clearRect = CGRect(x:20, y:650, width: 100, height:50)
+        let clearButton = UIButton(frame: clearRect)
         clearButton.layer.cornerRadius = 5
         clearButton.backgroundColor = UIColor.white.withAlphaComponent(0.8)
         clearButton.setTitle("Clear", for: .normal)
         clearButton.addTarget(self, action: #selector(clear), for: .touchUpInside)
         
+        // HISTORY button
+        let histRect = CGRect(x: 20, y: 50, width: 100, height: 50)
+        let histButton = UIButton(frame: histRect)
+        histButton.layer.cornerRadius = 5
+        histButton.backgroundColor = UIColor.white.withAlphaComponent(0.8)
+        histButton.setTitle("History", for: .normal)
+        histButton.addTarget(self, action: #selector(history), for: .touchUpInside)
+        
         self.view.addSubview(clearButton)
+        self.view.addSubview(histButton)
+        
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.isHidden = true
+    }
+    
+    // number of rows in table view
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.hexCodes.count
+    }
+    
+    // create a cell for each table view row
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        let cell:MyCustomCell = self.tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as! MyCustomCell
+        
+        cell.myView.backgroundColor = self.hexColors[indexPath.row]
+        cell.myCellLabel.text = self.hexCodes[indexPath.row]
+        
+        return cell
     }
     
     @objc func clear(sender: UIButton!) {
         sceneView.scene.rootNode.enumerateChildNodes { (node, stop) in
             node.removeFromParentNode()
+        }
+    }
+    
+    var panelOpen = false
+    
+    @objc func history(sender: UIButton!) {
+        if (panelOpen == false) {
+            print("open panel")
+            tableView.isHidden = false
+            panelOpen = true
+        } else {
+            tableView.isHidden = true
+            print("close panel")
+            panelOpen = false
         }
     }
     

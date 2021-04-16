@@ -15,6 +15,7 @@
 		4268F09E26268CE400AF997E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4268F09C26268CE400AF997E /* LaunchScreen.storyboard */; };
 		4268F0A926268CE400AF997E /* ColourNodesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4268F0A826268CE400AF997E /* ColourNodesTests.swift */; };
 		4268F0B426268CE400AF997E /* ColourNodesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4268F0B326268CE400AF997E /* ColourNodesUITests.swift */; };
+		42E3A734262922800060A87F /* MyCustomCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42E3A733262922800060A87F /* MyCustomCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +50,7 @@
 		4268F0AF26268CE400AF997E /* ColourNodesUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ColourNodesUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4268F0B326268CE400AF997E /* ColourNodesUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColourNodesUITests.swift; sourceTree = "<group>"; };
 		4268F0B526268CE400AF997E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		42E3A733262922800060A87F /* MyCustomCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyCustomCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,6 +108,7 @@
 				4268F09A26268CE400AF997E /* Assets.xcassets */,
 				4268F09C26268CE400AF997E /* LaunchScreen.storyboard */,
 				4268F09F26268CE400AF997E /* Info.plist */,
+				42E3A733262922800060A87F /* MyCustomCell.swift */,
 			);
 			path = ColourNodes;
 			sourceTree = "<group>";
@@ -259,6 +262,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				42E3A734262922800060A87F /* MyCustomCell.swift in Sources */,
 				4268F09626268CE200AF997E /* ViewController.swift in Sources */,
 				4268F09226268CE200AF997E /* AppDelegate.swift in Sources */,
 			);
