@@ -13,9 +13,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, UITableViewDelegate, 
     @IBOutlet var sceneView: ARSCNView!
     
     // TODO: update these to take in the nodes from the environment
-    let hexCodes: [String] = ["#C26C49", "#E2b9A8", "#5C77AC"]
+    var hexCodes: [String] = []
     // TODO: convert hexcodes from array above into UI colors
-    let hexColors = [UIColor(red: 0.76, green: 0.42, blue: 0.29, alpha: 1.00), UIColor(red: 0.89, green: 0.73, blue: 0.66, alpha: 1.00), UIColor(red: 0.36, green: 0.47, blue: 0.67, alpha: 1.00)]
+    var hexColors: [UIColor] = []
     
     let cellReuseIdentifier = "cell"
     
@@ -58,6 +58,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, UITableViewDelegate, 
         tableView.delegate = self
         tableView.dataSource = self
         tableView.isHidden = true
+        self.tableView.rowHeight = 50.0
+        self.tableView.backgroundColor = UIColor.white.withAlphaComponent(0.8)
+        self.tableView.layer.cornerRadius = 5
     }
     
     // number of rows in table view
@@ -69,9 +72,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, UITableViewDelegate, 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell:MyCustomCell = self.tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as! MyCustomCell
-        
+        cell.backgroundColor = UIColor.white.withAlphaComponent(0.8)
         cell.myView.backgroundColor = self.hexColors[indexPath.row]
         cell.myCellLabel.text = self.hexCodes[indexPath.row]
+        cell.myCellLabel.textAlignment = .center
+        cell.myCellLabel.textColor = UIColor.black
         
         return cell
     }
@@ -119,23 +124,23 @@ class ViewController: UIViewController, ARSCNViewDelegate, UITableViewDelegate, 
             // getting the location of the touch
             let loc:CGPoint = touch.location(in: sceneView)
             // Compute near & far points
-                let nearVector = SCNVector3(x: Float(loc.x), y: Float(loc.y), z: 0)
-                let nearScenePoint = sceneView.unprojectPoint(nearVector)
-                let farVector = SCNVector3(x: Float(loc.x), y: Float(loc.y), z: 1)
-                let farScenePoint = sceneView.unprojectPoint(farVector)
+            let nearVector = SCNVector3(x: Float(loc.x), y: Float(loc.y), z: 0)
+            let nearScenePoint = sceneView.unprojectPoint(nearVector)
+            let farVector = SCNVector3(x: Float(loc.x), y: Float(loc.y), z: 1)
+            let farScenePoint = sceneView.unprojectPoint(farVector)
 
-                // Compute view vector
-                let viewVector = SCNVector3(x: Float(farScenePoint.x - nearScenePoint.x), y: Float(farScenePoint.y - nearScenePoint.y), z: Float(farScenePoint.z - nearScenePoint.z))
+            // Compute view vector
+            let viewVector = SCNVector3(x: Float(farScenePoint.x - nearScenePoint.x), y: Float(farScenePoint.y - nearScenePoint.y), z: Float(farScenePoint.z - nearScenePoint.z))
 
-                // Normalize view vector
-                let vectorLength = sqrt(viewVector.x*viewVector.x + viewVector.y*viewVector.y + viewVector.z*viewVector.z)
-                let normalizedViewVector = SCNVector3(x: viewVector.x/vectorLength, y: viewVector.y/vectorLength, z: viewVector.z/vectorLength)
+            // Normalize view vector
+            let vectorLength = sqrt(viewVector.x*viewVector.x + viewVector.y*viewVector.y + viewVector.z*viewVector.z)
+            let normalizedViewVector = SCNVector3(x: viewVector.x/vectorLength, y: viewVector.y/vectorLength, z: viewVector.z/vectorLength)
 
-                // Scale normalized vector to find scene point
-                let scale = Float(5)
-                let scenePoint = SCNVector3(x: normalizedViewVector.x*scale, y: normalizedViewVector.y*scale, z: normalizedViewVector.z*scale)
+            // Scale normalized vector to find scene point
+            let scale = Float(5)
+            let scenePoint = SCNVector3(x: normalizedViewVector.x*scale, y: normalizedViewVector.y*scale, z: normalizedViewVector.z*scale)
 
-                print("2D point: \(loc). 3D point: \(nearScenePoint). Far point: \(farScenePoint). scene point: \(scenePoint)")
+            print("2D point: \(loc). 3D point: \(nearScenePoint). Far point: \(farScenePoint). scene point: \(scenePoint)")
 
             
             // getting the hex value of the node
@@ -149,11 +154,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, UITableViewDelegate, 
             let rgbRedValue = color[0]
             let rgbGreenValue = color[1]
             let rgbBlueValue = color[2]
-            
+        
+            let hexColor = UIColor(red: CGFloat(rgbRedValue)/255.0, green: CGFloat(rgbGreenValue)/255, blue: CGFloat(rgbBlueValue)/255.0, alpha: 1);
+            //print(hexColor)
             let hexValue = String(format:"%02X", Int(rgbRedValue)) + String(format:"%02X", Int(rgbGreenValue)) + String(format:"%02X", Int(rgbBlueValue))
-            //print(color)
-            print(hexValue)
-            
+            //print(hexValue)
+            // adding the hexcode to the history array
+            hexCodes.append(hexValue)
+            hexColors.append(hexColor)
+            self.tableView.reloadData()
+        
             let nodeImg = SCNNode(geometry: SCNSphere(radius: 0.05))
             nodeImg.physicsBody? = .static()
             //nodeImg.name = name
