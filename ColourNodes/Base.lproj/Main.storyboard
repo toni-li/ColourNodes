@@ -23,7 +23,7 @@
                                 <rect key="frame" x="44" y="146" width="287" height="469"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                <color key="separatorColor" red="0.96470588235294119" green="0.83921568627450982" blue="0.45098039215686275" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="separatorColor" systemColor="labelColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" rowHeight="50" id="UAM-FN-5PD" customClass="MyCustomCell" customModule="ColourNodes" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="287" height="50"/>
@@ -74,6 +74,9 @@
         </scene>
     </scenes>
     <resources>
+        <systemColor name="labelColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

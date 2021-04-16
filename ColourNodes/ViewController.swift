@@ -28,7 +28,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UITableViewDelegate, 
         sceneView.delegate = self
         
         // Show statistics such as fps and timing information
-        sceneView.showsStatistics = true
+        //sceneView.showsStatistics = true
         
         // Create a new scene
         let scene = SCNScene(named: "art.scnassets/blank.scn")!
@@ -37,18 +37,26 @@ class ViewController: UIViewController, ARSCNViewDelegate, UITableViewDelegate, 
         sceneView.scene = scene
         
         // CLEAR button
-        let clearRect = CGRect(x:20, y:650, width: 100, height:50)
-        let clearButton = UIButton(frame: clearRect)
+        let clearRect = CGRect(x: sceneView.frame.width - 105, y: sceneView.frame.height - 210, width: 50, height:50)
+        let clearButton = UIButton(type: .custom)
+        if let clearImg = UIImage(named: "clearButton.png") {
+            clearButton.setImage(clearImg, for: .normal)
+            clearButton.frame = clearRect
+        }
         clearButton.layer.cornerRadius = 5
-        clearButton.backgroundColor = UIColor.white.withAlphaComponent(0.8)
+        clearButton.backgroundColor = UIColor.white.withAlphaComponent(0.3)
         clearButton.setTitle("Clear", for: .normal)
         clearButton.addTarget(self, action: #selector(clear), for: .touchUpInside)
         
         // HISTORY button
-        let histRect = CGRect(x: 20, y: 50, width: 100, height: 50)
-        let histButton = UIButton(frame: histRect)
+        let histRect = CGRect(x: sceneView.frame.width - 105, y: sceneView.frame.height - 150, width: 50, height: 50)
+        let histButton = UIButton(type: .custom)
+        if let histImg = UIImage(named: "historyButton.png") {
+            histButton.setImage(histImg, for: .normal)
+            histButton.frame = histRect
+        }
         histButton.layer.cornerRadius = 5
-        histButton.backgroundColor = UIColor.white.withAlphaComponent(0.8)
+        histButton.backgroundColor = UIColor.white.withAlphaComponent(0.3)
         histButton.setTitle("History", for: .normal)
         histButton.addTarget(self, action: #selector(history), for: .touchUpInside)
         
