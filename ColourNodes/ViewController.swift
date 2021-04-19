@@ -178,12 +178,34 @@ class ViewController: UIViewController, ARSCNViewDelegate, UITableViewDelegate, 
             nodeImg.geometry?.materials.first?.specular.contents = UIColor.white
             nodeImg.position = SCNVector3(scenePoint.x, scenePoint.y, scenePoint.z)
             print(nodeImg.position)
-
+            
             sceneView.scene.rootNode.addChildNode(nodeImg)
+            
+            // draw a bounding box around the SCNNode so it shows up better
+            let box = SCNBox(width: 0.1, height: 0.1, length: 0.1, chamferRadius: 0)
+            box.firstMaterial?.emission.contents = UIColor.cyan
+            let sm = "float u = _surface.diffuseTexcoord.x; \n" +
+                "float v = _surface.diffuseTexcoord.y; \n" +
+                "int u100 = int(u * 100); \n" +
+                "int v100 = int(v * 100); \n" +
+                "if (u100 % 99 == 0 || v100 % 99 == 0) { \n" +
+                "  // do nothing \n" +
+                "} else { \n" +
+                "    discard_fragment(); \n" +
+                "} \n"
+            box.firstMaterial?.shaderModifiers = [SCNShaderModifierEntryPoint.surface: sm]
+            box.firstMaterial?.isDoubleSided = true
+            let boundNode = SCNNode(geometry: box)
+            boundNode.geometry?.firstMaterial?.fillMode = .lines
+            boundNode.geometry?.firstMaterial?.diffuse.contents = UIColor.white
+            boundNode.constraints = [SCNBillboardConstraint()]
+            nodeImg.addChildNode(boundNode)
         
             
             let text = SCNText(string: hexValue, extrusionDepth: 0.0)
             text.firstMaterial?.diffuse.contents = UIColor.black
+           // let font = UIFont(name: "AppleColorEmoji", size: 10.0)!
+            //text.font = font
             let nodeText = SCNNode(geometry: text)
             let fontScale: Float = 0.01
             nodeText.scale = SCNVector3(fontScale, fontScale, fontScale)
